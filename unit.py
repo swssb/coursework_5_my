@@ -47,8 +47,8 @@ class BaseUnit(ABC):
         #  если у защищающегося нехватает выносливости - его броня игнорируется
         #  после всех расчетов цель получает урон - target.get_damage(damage)
         #  и возвращаем предполагаемый урон для последующего вывода пользователю в текстовом виде
-        return damage
-
+        # return damage
+        pass
     def get_damage(self, damage: int) -> Optional[int]:
         # TODO получение урона целью
         #      присваиваем новое значение для аттрибута self.hp
@@ -84,9 +84,9 @@ class PlayerUnit(BaseUnit):
         """
         pass
         # TODO результат функции должен возвращать следующие строки:
-        f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} соперника и наносит {damage} урона."
-        f"{self.name} используя {self.weapon.name} наносит удар, но {target.armor.name} cоперника его останавливает."
-        f"{self.name} попытался использовать {self.weapon.name}, но у него не хватило выносливости."
+        # f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} соперника и наносит {damage} урона."
+        # f"{self.name} используя {self.weapon.name} наносит удар, но {target.armor.name} cоперника его останавливает."
+        # f"{self.name} попытался использовать {self.weapon.name}, но у него не хватило выносливости."
 
 class EnemyUnit(BaseUnit):
 
@@ -100,8 +100,8 @@ class EnemyUnit(BaseUnit):
         функция _count_damage(target
         """
         # TODO результат функции должен возвращать результат функции skill.use или же следующие строки:
-        f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} и наносит Вам {damage} урона."
-        f"{self.name} используя {self.weapon.name} наносит удар, но Ваш(а) {target.armor.name} его останавливает."
-        f"{self.name} попытался использовать {self.weapon.name}, но у него не хватило выносливости."
-
+        # f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} и наносит Вам {damage} урона."
+        # f"{self.name} используя {self.weapon.name} наносит удар, но Ваш(а) {target.armor.name} его останавливает."
+        # f"{self.name} попытался использовать {self.weapon.name}, но у него не хватило выносливости."
+        pass
 

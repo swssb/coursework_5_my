@@ -1,3 +1,7 @@
+from flask import Flask, render_template
+
+from unit import BaseUnit
+
 app = Flask(__name__)
 
 heroes = {
@@ -11,7 +15,7 @@ arena =  ... # TODO инициализируем класс арены
 @app.route("/")
 def menu_page():
     # TODO рендерим главное меню (шаблон index.html)
-    pass
+    return render_template("index.html")
 
 
 @app.route("/fight/")
@@ -67,4 +71,4 @@ def choose_enemy():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
