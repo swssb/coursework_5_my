@@ -1,5 +1,6 @@
 from unit import BaseUnit
 
+
 class BaseSingleton(type):
     _instances = {}
 
@@ -23,7 +24,7 @@ class Arena(metaclass=BaseSingleton):
         self.enemy = enemy
         self.game_is_running = True
 
-    def _check_players_hp(self):
+    def _check_players_hp(self) -> str:
         """ПРОВЕРКА ЗДОРОВЬЯ ИГРОКА И КОМПЬЮТЕРА И ЗАПИСЬ РЕЗУЛЬТАТА"""
         if self.player.hp <= 0 and self.enemy.hp <= 0:
             self.battle_result = 'Ничья'
@@ -33,15 +34,14 @@ class Arena(metaclass=BaseSingleton):
             self.battle_result = 'Игрок выиграл'
         return self._end_game()
 
-    def _stamina_regeneration(self):
+    def _stamina_regeneration(self) -> None:
         """ РЕГЕНЕРАЦИЯ ВЫНОСЛИВОСТИ КАЖДЫЙ РАУНД НА КОНСТАНТУ """
         if self.player.stamina <= self.player.unit_class.max_stamina:
             self.player.stamina += self.STAMINA_PER_ROUND
         if self.enemy.stamina <= self.enemy.unit_class.max_stamina:
             self.enemy.stamina += self.STAMINA_PER_ROUND
 
-
-    def next_turn(self):
+    def next_turn(self) -> str:
         """ СЛЕДУЮЩИЙ ХОД -> return result | return self.enemy.hit(self.player)
          срабатывает когда игрок пропускает ход или когда игрок наносит удар."""
         result = self._check_players_hp()
@@ -49,19 +49,14 @@ class Arena(metaclass=BaseSingleton):
             return result
         self._stamina_regeneration()
         result = self.enemy.hit(self.player)
-        # self.player_hit()
         return result
-
 
     def _end_game(self) -> str:
         """ КНОПКА ЗАВЕРШЕНИЕ ИГРЫ - > return result: str"""
-
         result = self.battle_result()
-        # cls._instances = {}
         self._instances = {}
         self.game_is_running = False
         return result
-
 
     def player_hit(self) -> str:
         """ КНОПКА УДАР ИГРОКА -> return result: str """

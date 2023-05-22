@@ -1,10 +1,10 @@
+import json
 import random
 from dataclasses import dataclass
 from typing import List
-from random import uniform
-import marshmallow_dataclass
+
 import marshmallow
-import json
+import marshmallow_dataclass
 
 
 @dataclass
@@ -69,5 +69,3 @@ class Equipment:
             return equipment_schema().load(data)
         except marshmallow.exceptions.ValidationError:
             raise ValueError
-    # print(_get_equipment_data())
-

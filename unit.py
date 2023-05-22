@@ -2,16 +2,17 @@ from __future__ import annotations
 
 import random
 from abc import ABC, abstractmethod
-from equipment import Equipment, Weapon, Armor
-from classes import UnitClass
-from random import randint
 from typing import Optional
+
+from classes import UnitClass
+from equipment import Equipment, Weapon, Armor
 
 
 class BaseUnit(ABC):
     """
     Базовый класс юнита
     """
+
     def __init__(self, name: str, unit_class: UnitClass):
         """
         При инициализации класса Unit используем свойства класса UnitClass
@@ -32,12 +33,12 @@ class BaseUnit(ABC):
     def stamina_points(self):
         return round(self.stamina, 1)
 
-    def equip_weapon(self, weapon: Weapon):
+    def equip_weapon(self, weapon: Weapon) -> str:
         """ присваиваем нашему герою новое оружие """
         self.weapon = weapon
         return f"{self.name} экипирован оружием {self.weapon.name}"
 
-    def equip_armor(self, armor: Armor):
+    def equip_armor(self, armor: Armor) -> str:
         """ одеваем новую броню"""
         self.armor = armor
         return f"{self.name} экипирован броней {self.weapon.name}"
@@ -69,6 +70,7 @@ class BaseUnit(ABC):
              присваиваем новое значение для аттрибута self.hp"""
         self.hp -= damage
         return round(damage, 1)
+
     @abstractmethod
     def hit(self, target: BaseUnit) -> str:
         """
@@ -119,15 +121,12 @@ class EnemyUnit(BaseUnit):
         Если умение не применено, противник наносит простой удар, где также используется
         функция _count_damage(target
         """
-        if random.randint(1,10) != 10 and not self._is_skill_used and self.stamina > self.unit_class.stamina:
+        if random.randint(1, 10) != 10 and not self._is_skill_used and self.stamina > self.unit_class.stamina:
             return self.use_skill(target)
 
-        # ???randint?? TODO результат функции должен возвращать результат функции skill.use или же следующие строки:
         if self.stamina > self.weapon.stamina_per_hit * self.unit_class.stamina:
             damage = self._count_damage(target)
             if damage:
                 return f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} и наносит Вам {damage} урона."
             return f"{self.name} используя {self.weapon.name} наносит удар, но Ваш(а) {target.armor.name} его останавливает."
         return f"{self.name} попытался использовать {self.weapon.name}, но у него не хватило выносливости."
-
-
