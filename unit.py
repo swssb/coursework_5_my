@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import random
 from abc import ABC, abstractmethod
 from equipment import Equipment, Weapon, Armor
 from classes import UnitClass
@@ -117,7 +119,7 @@ class EnemyUnit(BaseUnit):
         Если умение не применено, противник наносит простой удар, где также используется
         функция _count_damage(target
         """
-        if not self._is_skill_used and self.stamina > self.unit_class.stamina:
+        if random.randint(1,10) != 10 and not self._is_skill_used and self.stamina > self.unit_class.stamina:
             return self.use_skill(target)
 
         # ???randint?? TODO результат функции должен возвращать результат функции skill.use или же следующие строки:

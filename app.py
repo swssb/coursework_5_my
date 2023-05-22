@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 
+from base import Arena
 from unit import BaseUnit
 
 app = Flask(__name__)
@@ -9,12 +10,12 @@ heroes = {
     "enemy": BaseUnit
 }
 
-arena =  ... # TODO инициализируем класс арены
+arena = Arena()
 
 
 @app.route("/")
 def menu_page():
-    # TODO рендерим главное меню (шаблон index.html)
+    """рендерим главное меню (шаблон index.html)"""
     return render_template("index.html")
 
 
