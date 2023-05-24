@@ -28,18 +28,23 @@ class Arena(metaclass=BaseSingleton):
         """ПРОВЕРКА ЗДОРОВЬЯ ИГРОКА И КОМПЬЮТЕРА И ЗАПИСЬ РЕЗУЛЬТАТА"""
         if self.player.hp <= 0 and self.enemy.hp <= 0:
             self.battle_result = 'Ничья'
+            return self._end_game()
         if self.player.hp <= 0:
             self.battle_result = 'Игрок проиграл'
+            return self._end_game()
         if self.enemy.hp <= 0:
             self.battle_result = 'Игрок выиграл'
-        return self._end_game()
+            return self._end_game()
 
     def _stamina_regeneration(self) -> None:
         """ РЕГЕНЕРАЦИЯ ВЫНОСЛИВОСТИ КАЖДЫЙ РАУНД НА КОНСТАНТУ """
-        if self.player.stamina <= self.player.unit_class.max_stamina:
-            self.player.stamina += self.STAMINA_PER_ROUND
-        if self.enemy.stamina <= self.enemy.unit_class.max_stamina:
-            self.enemy.stamina += self.STAMINA_PER_ROUND
+        if self.player.stamina + self.STAMINA_PER_ROUND <= int(self.player.unit_class.max_stamina):
+            print(self.player.stamina)
+            print(self.player.unit_class.stamina)
+            print(self.STAMINA_PER_ROUND)
+            self.player.stamina += self.STAMINA_PER_ROUND * self.player.unit_class.stamina
+        if self.enemy.stamina + self.STAMINA_PER_ROUND <= int(self.enemy.unit_class.max_stamina):
+            self.enemy.stamina += self.STAMINA_PER_ROUND * self.enemy.unit_class.stamina
 
     def next_turn(self) -> str:
         """ СЛЕДУЮЩИЙ ХОД -> return result | return self.enemy.hit(self.player)
@@ -47,25 +52,27 @@ class Arena(metaclass=BaseSingleton):
         result = self._check_players_hp()
         if result:
             return result
-        self._stamina_regeneration()
-        result = self.enemy.hit(self.player)
+        if self.game_is_running:
+            self._stamina_regeneration()
+            result = self.enemy.hit(self.player)
         return result
 
     def _end_game(self) -> str:
         """ КНОПКА ЗАВЕРШЕНИЕ ИГРЫ - > return result: str"""
-        result = self.battle_result()
         self._instances = {}
+        result = f"{self.battle_result}\n Игра закончена!"
+        # print(result)
         self.game_is_running = False
         return result
 
     def player_hit(self) -> str:
         """ КНОПКА УДАР ИГРОКА -> return result: str """
         result = self.player.hit(self.enemy)
-        self.next_turn()
-        return result
+        turn_result = self.next_turn()
+        return f"{result}\n{turn_result}"
 
     def player_use_skill(self) -> str:
         """ КНОПКА ИГРОК ИСПОЛЬЗУЕТ УМЕНИЕ """
         result = self.player.use_skill(self.enemy)
-        self.next_turn()
-        return result
+        turn_result = self.next_turn()
+        return f"{result}\n{turn_result}"

@@ -55,20 +55,20 @@ class BaseUnit(ABC):
         """
         damage = 0
         if self.stamina > self.weapon.stamina_per_hit:
-            damage = round(self.weapon.damage * self.unit_class.attack, 1)
-            self.stamina -= self.weapon.stamina_per_hit + 1 * self.unit_class.stamina
+            damage = self.weapon.damage * self.unit_class.attack
+            self.stamina -= round(self.weapon.stamina_per_hit + 1 * self.unit_class.stamina, 1)
         if target.stamina > target.armor.stamina_per_turn:
             target_armor = target.armor.defence * target.unit_class.armor
-            target.stamina -= target.armor.stamina_per_turn + 1 * target.unit_class.stamina
-            damage -= target_armor
-
-        damage = target.get_damage(damage)
+            target.stamina -= round(target.armor.stamina_per_turn + 1 * target.unit_class.stamina, 1)
+            damage = damage - target_armor
+        damage = round(target.get_damage(damage), 1)
         return damage
 
     def get_damage(self, damage: int) -> Optional[int]:
         """  получение урона целью
              присваиваем новое значение для аттрибута self.hp"""
-        self.hp -= damage
+        if self.hp > 0:
+            self.hp -= damage
         return round(damage, 1)
 
     @abstractmethod
@@ -88,9 +88,9 @@ class BaseUnit(ABC):
         и уже эта функция вернем нам строку которая характеризует выполнение умения
         """
         if self._is_skill_used:
-            return "Навык уже использован"
+            return "Навык уже использован, переход хода"
         self._is_skill_used = True
-        self.unit_class.skill.use(user=self, target=target)
+        return self.unit_class.skill.use(user=self, target=target)
 
 
 class PlayerUnit(BaseUnit):
@@ -102,7 +102,7 @@ class PlayerUnit(BaseUnit):
         вызывается функция self._count_damage(target)
         а также возвращается результат в виде строки
         """
-        if self.stamina > self.weapon.stamina_per_hit * self.unit_class.stamina:
+        if self.stamina >= self.weapon.stamina_per_hit * self.unit_class.stamina and self.stamina > 0:
             damage = self._count_damage(target)
             if damage:
                 return f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} соперника и наносит {damage} урона."
@@ -121,8 +121,9 @@ class EnemyUnit(BaseUnit):
         Если умение не применено, противник наносит простой удар, где также используется
         функция _count_damage(target
         """
-        if random.randint(1, 10) != 10 and not self._is_skill_used and self.stamina > self.unit_class.stamina:
-            return self.use_skill(target)
+        if random.randint(1, 100) > 10 and not self._is_skill_used and self.stamina >= self.unit_class.stamina:
+            if self.stamina > 0:
+                return self.use_skill(target)
 
         if self.stamina > self.weapon.stamina_per_hit * self.unit_class.stamina:
             damage = self._count_damage(target)

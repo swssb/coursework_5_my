@@ -34,7 +34,7 @@ class Skill(ABC):
         pass
 
     def _is_stamina_enough(self) -> bool:
-        return self.user.stamina > self.stamina
+        return self.user.stamina >= self.stamina
 
     def use(self, user: BaseUnit, target: BaseUnit) -> str:
         """
