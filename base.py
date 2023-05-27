@@ -38,12 +38,14 @@ class Arena(metaclass=BaseSingleton):
 
     def _stamina_regeneration(self) -> None:
         """ РЕГЕНЕРАЦИЯ ВЫНОСЛИВОСТИ КАЖДЫЙ РАУНД НА КОНСТАНТУ """
-        if self.player.stamina + self.STAMINA_PER_ROUND <= int(self.player.unit_class.max_stamina):
-            print(self.player.stamina)
-            print(self.player.unit_class.stamina)
-            print(self.STAMINA_PER_ROUND)
+        if self.player.stamina + self.STAMINA_PER_ROUND * self.player.unit_class.stamina\
+                <= int(self.player.unit_class.max_stamina):
+            # print(self.player.stamina)
+            # print(self.player.unit_class.stamina)
+            # print(self.STAMINA_PER_ROUND)
             self.player.stamina += self.STAMINA_PER_ROUND * self.player.unit_class.stamina
-        if self.enemy.stamina + self.STAMINA_PER_ROUND <= int(self.enemy.unit_class.max_stamina):
+        if self.enemy.stamina + self.STAMINA_PER_ROUND * self.player.unit_class.stamina \
+                <= int(self.enemy.unit_class.max_stamina):
             self.enemy.stamina += self.STAMINA_PER_ROUND * self.enemy.unit_class.stamina
 
     def next_turn(self) -> str:
@@ -69,10 +71,10 @@ class Arena(metaclass=BaseSingleton):
         """ КНОПКА УДАР ИГРОКА -> return result: str """
         result = self.player.hit(self.enemy)
         turn_result = self.next_turn()
-        return f"{result}\n{turn_result}"
+        return f"{result}\n\n{turn_result}"
 
     def player_use_skill(self) -> str:
         """ КНОПКА ИГРОК ИСПОЛЬЗУЕТ УМЕНИЕ """
         result = self.player.use_skill(self.enemy)
         turn_result = self.next_turn()
-        return f"{result}\n{turn_result}"
+        return f"{result}\n\n{turn_result}"

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from skills import FuryPunch, Skill, HardShot
+from skills import FuryPunch, Skill, HardShot, AtomStrike
 
 
 @dataclass
@@ -34,7 +34,18 @@ ThiefClass = UnitClass(
     skill=HardShot()
 )
 
+WizardClass = UnitClass(
+    name='Маг',
+    max_health=40.0,
+    max_stamina=40.0,
+    attack=1.2,
+    stamina=1.5,
+    armor=1.0,
+    skill=AtomStrike()
+)
+
 unit_classes = {
     ThiefClass.name: ThiefClass,
-    WarriorClass.name: WarriorClass
+    WarriorClass.name: WarriorClass,
+    WizardClass.name: WizardClass
 }

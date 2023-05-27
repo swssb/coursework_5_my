@@ -75,3 +75,15 @@ class HardShot(Skill):
         self.target.hp -= self.damage
         return f"{self.user.name} применил {self.name}, потерял {self.stamina} очков выносливости " \
                f"и нанес {self.damage} урона врагу {self.target.name}"
+
+
+class AtomStrike(Skill):
+    name = "Атомный удар"
+    stamina = 6
+    damage = 18
+
+    def skill_effect(self) -> str:
+        self.user.stamina -= self.stamina
+        self.target.hp -= self.damage
+        return f"{self.user.name} применил {self.name}, потерял {self.stamina} очков выносливости " \
+               f"и нанес {self.damage} урона врагу {self.target.name}"

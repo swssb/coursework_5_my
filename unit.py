@@ -56,12 +56,12 @@ class BaseUnit(ABC):
         damage = 0
         if self.stamina > self.weapon.stamina_per_hit:
             damage = self.weapon.damage * self.unit_class.attack
-            self.stamina -= round(self.weapon.stamina_per_hit + 1 * self.unit_class.stamina, 1)
-        if target.stamina > target.armor.stamina_per_turn:
+            self.stamina = self.stamina - self.weapon.stamina_per_hit * self.unit_class.stamina
+        if target.stamina > target.armor.stamina_per_turn * target.unit_class.stamina:
             target_armor = target.armor.defence * target.unit_class.armor
-            target.stamina -= round(target.armor.stamina_per_turn + 1 * target.unit_class.stamina, 1)
+            target.stamina = target.stamina - target.armor.stamina_per_turn * target.unit_class.stamina
             damage = damage - target_armor
-        damage = round(target.get_damage(damage), 1)
+        damage = target.get_damage(damage)
         return damage
 
     def get_damage(self, damage: int) -> Optional[int]:
@@ -102,7 +102,7 @@ class PlayerUnit(BaseUnit):
         вызывается функция self._count_damage(target)
         а также возвращается результат в виде строки
         """
-        if self.stamina >= self.weapon.stamina_per_hit * self.unit_class.stamina and self.stamina > 0:
+        if self.stamina >= self.weapon.stamina_per_hit * self.unit_class.stamina:
             damage = self._count_damage(target)
             if damage:
                 return f"{self.name} используя {self.weapon.name} пробивает {target.armor.name} соперника и наносит {damage} урона."
@@ -121,9 +121,9 @@ class EnemyUnit(BaseUnit):
         Если умение не применено, противник наносит простой удар, где также используется
         функция _count_damage(target
         """
-        if random.randint(1, 100) > 10 and not self._is_skill_used and self.stamina >= self.unit_class.stamina:
-            if self.stamina > 0:
-                return self.use_skill(target)
+        chance = random.randint(0, 100)
+        if chance < 10 and not self._is_skill_used and self.stamina >= self.unit_class.stamina:
+            return self.use_skill(target)
 
         if self.stamina > self.weapon.stamina_per_hit * self.unit_class.stamina:
             damage = self._count_damage(target)
